@@ -1,0 +1,37 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from UserValidateServiceImplService WSDL service -->
+
+  <service name="UserValidateServiceImpl" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://service.com"/>
+      <parameter name="wsdlServiceElement" value="UserValidateServiceImplService"/>
+      <parameter name="schemaQualified" value="http://vo.com,http://service.com"/>
+      <parameter name="wsdlServicePort" value="UserValidateServiceImpl"/>
+      <parameter name="className" value="com.service.UserValidateServiceImplSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="UserValidateServiceImpl"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="validateUser" qname="operNS:validateUser" xmlns:operNS="http://service.com" returnQName="retNS:validateUserReturn" xmlns:retNS="http://service.com" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="pns:user" xmlns:pns="http://service.com" type="tns:User" xmlns:tns="http://vo.com"/>
+      </operation>
+      <parameter name="allowedMethods" value="validateUser"/>
+
+      <typeMapping
+        xmlns:ns="http://vo.com"
+        qname="ns:User"
+        type="java:com.vo.User"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>
